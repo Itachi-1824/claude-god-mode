@@ -1,0 +1,48 @@
+# Build artifacts
+dist/
+build/
+.next/
+target/
+out/
+
+# Dependencies
+node_modules/
+vendor/
+.venv/
+__pycache__/
+
+# Lock files
+*.lock
+package-lock.json
+
+# Generated files
+*.min.js
+*.min.css
+*.map
+*.d.ts
+*.tsbuildinfo
+
+# Coverage & test artifacts
+coverage/
+.nyc_output/
+htmlcov/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Large data
+*.sqlite
+*.db
+*.csv
+*.parquet
+
+# Logs
+*.log
+logs/

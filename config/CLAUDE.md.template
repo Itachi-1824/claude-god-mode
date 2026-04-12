@@ -1,0 +1,54 @@
+# Global Rules
+
+## Identity
+- Never mention Claude, Claude Code, or AI in any commit, PR, comment, or message
+- Commits: short, lowercase, no fluff. e.g. `fix auth redirect on logout`. No `Co-Authored-By`
+- PRs: human-written tone, brief explanation of what/why. No templates, no checklists, no AI footer
+
+## Code Style
+- Immutability: always create new objects, never mutate existing ones
+- Files: 200-400 lines typical, 800 max. Organize by feature/domain
+- Functions: <50 lines. No deep nesting (>4 levels)
+- Validate all input at system boundaries. Never silently swallow errors
+- Run linter/formatter before every commit (ruff for Python, biome for JS/TS, gofumpt for Go, cargo fmt for Rust)
+
+## Workflow
+1. Research first (`/search-first`, context7)
+2. Plan (`/plan`) before non-trivial work
+3. TDD (`/tdd`) — tests first, 80%+ coverage
+4. Review (`/code-review`) before merge
+5. Security review (`/security-review`) for auth, billing, API, infra
+6. Verify (`/verify`) before claiming done
+
+## Security
+- No hardcoded secrets — env vars or secret managers only
+- Parameterized queries only. Validate all inputs. Rate limit public endpoints
+- Never leak stack traces or internal paths to clients
+- Run `/security-scan` before commits touching auth/billing/API
+
+## Git
+Commit format: `<type>: <description>` (feat, fix, refactor, docs, test, chore, perf, ci)
+
+## Model Routing
+- Default for web research/exploration/file search agents: `model: "haiku"`
+- User can override per-task: "use sonnet for this research" or "use opus for this"
+- Code implementation, review, security, architecture agents: always inherit session model
+- Use `/effort low` for trivial tasks, `/effort high` only for complex work
+
+## RTK (Rust Token Killer)
+**Always prefix Bash commands with `rtk`** for 60-90% token savings on output. RTK passes through unchanged if no filter exists — always safe to use. In chains: `rtk git add . && rtk git commit -m "msg"`. Use `rtk gain` to check savings stats.
+
+## Code Graph (codebase-memory-mcp)
+**ALWAYS query the knowledge graph BEFORE using Grep/Glob/Read.** Use `search_symbols` for code search, `trace_dependencies` for impact analysis, `get_architecture` for codebase overview. Say "index this project" to build the graph. Fall back to file tools only when graph doesn't cover it.
+
+## Verification (NEVER skip)
+- Run tests and show output before marking ANY task complete
+- Run type checker (pyright/tsc/cargo check) and show 0 errors
+- NEVER say "this should work" — prove it does with evidence
+- For bug fixes: show the original error no longer occurs
+- Use LSP tools (getDiagnostics, goToDefinition, findReferences) over Grep for code navigation
+
+## Token Efficiency
+- `/clear` between unrelated tasks. `/compact` at logical breakpoints
+- Use Explore agent or smart_search/smart_outline instead of reading entire files
+- Prefer CLI tools (gh, aws) over MCP equivalents when possible

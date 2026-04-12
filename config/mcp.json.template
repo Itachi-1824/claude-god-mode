@@ -1,0 +1,15 @@
+{
+  "_comment": "Copy to ~/.mcp.json — these MCP servers load globally across all projects",
+  "mcpServers": {
+    "codebase-memory": {
+      "_comment": "Code knowledge graph — 99% token reduction. Install: download binary from https://github.com/DeusData/codebase-memory-mcp/releases",
+      "command": "REPLACE_WITH_PATH_TO/codebase-memory-mcp",
+      "args": []
+    },
+    "context-mode": {
+      "_comment": "Tool output sandboxing — 98% reduction. Install: npm install -g context-mode",
+      "command": "context-mode",
+      "args": []
+    }
+  }
+}

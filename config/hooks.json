@@ -15,12 +15,22 @@
     ],
     "PreToolUse": [
       {
-        "matcher": "Grep|Glob",
+        "matcher": "Grep",
         "hooks": [
           {
             "type": "command",
-            "command": "echo '[TOKEN SAVE] Consider using serena (find_symbol, find_referencing_symbols) or jCodeMunch (semantic search, call hierarchy) instead of Grep/Glob. Both are faster and use fewer tokens. Only proceed with Grep/Glob if neither covers this query.'",
-            "timeout": 2000
+            "command": "node ~/.claude/hooks/serena-grep-guard.js",
+            "timeout": 5
+          }
+        ]
+      },
+      {
+        "matcher": "Glob",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node ~/.claude/hooks/serena-glob-guard.js",
+            "timeout": 5
           }
         ]
       },
@@ -37,6 +47,11 @@
             "if": "Bash(git commit*)",
             "command": "CMD=$(cat | python3 -c \"import sys,json; print(json.load(sys.stdin).get(\"tool_input\",{}).get(\"command\",\"\"))\" 2>/dev/null); if echo \"$CMD\" | grep -qE \"\\-\\-no-verify\"; then echo \"[BLOCKED] --no-verify is not allowed. Fix the hook failure instead.\" >&2; exit 2; fi; BRANCH=$(git branch --show-current 2>/dev/null); if echo \"$BRANCH\" | grep -qE \"^(main|master)$\"; then echo \"[WARNING] Committing to $BRANCH. Create a feature branch unless intentional.\" >&2; fi; for f in $(git diff --cached --name-only 2>/dev/null); do case \"$f\" in *.py) python3 -m ruff check --fix \"$f\" 2>/dev/null && python3 -m ruff format \"$f\" 2>/dev/null ;; *.ts|*.tsx|*.js|*.jsx) npx --yes biome check --write \"$f\" 2>/dev/null ;; *.go) gofumpt -w \"$f\" 2>/dev/null ;; *.rs) rustfmt \"$f\" 2>/dev/null ;; esac; done; git add -u 2>/dev/null || true",
             "timeout": 30000
+          },
+          {
+            "type": "command",
+            "command": "node ~/.claude/hooks/serena-bash-guard.js",
+            "timeout": 5
           }
         ]
       },

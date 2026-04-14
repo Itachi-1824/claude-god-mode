@@ -42,13 +42,17 @@ Commit format: `<type>: <description>` (feat, fix, refactor, docs, test, chore, 
 **ALWAYS query the knowledge graph BEFORE using Grep/Glob/Read.** Use `search_symbols` for code search, `trace_dependencies` for impact analysis, `get_architecture` for codebase overview. Say "index this project" to build the graph. Fall back to file tools only when graph doesn't cover it.
 
 ## Code Connectivity (CRITICAL — the #1 AI failure mode)
+- BEFORE writing a new file: identify WHERE it will be imported. Name the file and line
 - NEVER write a file without immediately wiring it into the system
 - After creating ANY new module/function/component, show WHERE it's imported and called
 - After creating ANY new endpoint, show the router registration line
 - After creating ANY new component, show the parent that renders it
-- Before claiming done, trace the FULL call chain: user action -> handler -> service -> storage
 - Use `find_referencing_symbols` (serena) or `trace_path` (codebase-memory) to verify connectivity
 - If new code has zero callers = NOT DONE. Wire it up or delete it
+- Before claiming done, show this trace:
+  ENTRY: [main/router/CLI] -> ROUTE -> HANDLER -> SERVICE -> STORAGE
+  TEST: [test name exercising this chain]
+  RESULT: [actual test output, not "should work"]
 
 ## Testing (REAL tests, not theater)
 - Integration tests > unit tests. Test the RUNNING system, not mocked fantasies

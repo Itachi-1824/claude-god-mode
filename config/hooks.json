@@ -110,6 +110,11 @@
             "type": "command",
             "command": "bash ~/.claude/bin/session-resume.sh",
             "timeout": 5000
+          },
+          {
+            "type": "command",
+            "command": "bash ~/.claude/bin/auto-onboard.sh",
+            "timeout": 3000
           }
         ]
       }

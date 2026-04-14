@@ -1,6 +1,6 @@
 ---
 name: tree-of-thought
-description: Explores multiple solution approaches before committing to one. Use for complex problems where the first idea might not be best — algorithms, architecture, performance optimization, or any problem with multiple valid solutions.
+description: Explores multiple solution approaches before committing to one. Use for algorithm selection, data structure choices, performance optimization, or implementation-level decisions where 3+ fundamentally different approaches exist. NOT for system architecture (use architect for that).
 tools: Read, Grep, Glob, Bash
 model: opus
 effort: max

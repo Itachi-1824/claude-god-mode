@@ -1,6 +1,6 @@
 ---
 name: hypothesis-tester
-description: Generates property-based tests that find edge cases humans miss. Use for pure functions, parsers, serializers, data transformations, and any code where input space is large. Has found real bugs in NumPy, Pandas, SciPy.
+description: Generates property-based tests that find edge cases humans miss. Use for pure functions, parsers, serializers, data transformations, and any code where input space is large.
 tools: Read, Write, Edit, Bash, Grep, Glob
 model: sonnet
 effort: high

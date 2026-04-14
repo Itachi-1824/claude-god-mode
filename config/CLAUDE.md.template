@@ -14,7 +14,7 @@
 
 ## Workflow
 1. Research first (`/search-first`, context7)
-2. Plan (`/plan`) before non-trivial work
+2. Plan (`/plan`) before non-trivial work (>2 files or >1 hour)
 3. TDD (`/tdd`) — tests first, 80%+ coverage
 4. Review (`/code-review`) before merge
 5. Security review (`/security-review`) for auth, billing, API, infra
@@ -39,7 +39,7 @@ Commit format: `<type>: <description>` (feat, fix, refactor, docs, test, chore, 
 **Always prefix Bash commands with `rtk`** for 60-90% token savings on output. RTK passes through unchanged if no filter exists — always safe to use. In chains: `rtk git add . && rtk git commit -m "msg"`. Use `rtk gain` to check savings stats.
 
 ## Code Graph (codebase-memory-mcp)
-**ALWAYS query the knowledge graph BEFORE using Grep/Glob/Read.** Use `search_symbols` for code search, `trace_dependencies` for impact analysis, `get_architecture` for codebase overview. Say "index this project" to build the graph. Fall back to file tools only when graph doesn't cover it.
+**ALWAYS query the knowledge graph BEFORE using Grep/Glob/Read.** Use `search_code` for code search, `trace_path` for impact analysis, `get_architecture` for codebase overview. Say "index this project" to build the graph. Fall back to file tools only when graph doesn't cover it.
 
 ## Code Connectivity (CRITICAL — the #1 AI failure mode)
 - BEFORE writing a new file: identify WHERE it will be imported. Name the file and line
@@ -47,7 +47,7 @@ Commit format: `<type>: <description>` (feat, fix, refactor, docs, test, chore, 
 - After creating ANY new module/function/component, show WHERE it's imported and called
 - After creating ANY new endpoint, show the router registration line
 - After creating ANY new component, show the parent that renders it
-- Use `find_referencing_symbols` (serena) or `trace_path` (codebase-memory) to verify connectivity
+- Use `find_referencing_symbols` (serena MCP) or `trace_path` (codebase-memory) to verify connectivity
 - If new code has zero callers = NOT DONE. Wire it up or delete it
 - Before claiming done, show this trace:
   ENTRY: [main/router/CLI] -> ROUTE -> HANDLER -> SERVICE -> STORAGE

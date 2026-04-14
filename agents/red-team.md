@@ -1,6 +1,6 @@
 ---
 name: red-team
-description: Security red team agent that attacks code by targeting the developer's STATED security assumptions. Use for auth, billing, API, infra, or any security-sensitive code. Proactively use before commits touching sensitive paths.
+description: Security red team agent that attacks the developer's STATED security assumptions — claims like "I validated inputs" or "auth is required". Use ONLY for security-sensitive code (auth, billing, API, infra). NOT for general code review (use adversarial-coach for that).
 tools: Read, Grep, Glob, Bash
 model: opus
 effort: max

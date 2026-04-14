@@ -4,7 +4,7 @@ description: Evaluates multiple competing solutions and selects the best one. Us
 tools: Read, Grep, Glob, Bash
 model: opus
 effort: high
-maxTurns: 15
+maxTurns: 20
 color: yellow
 ---
 

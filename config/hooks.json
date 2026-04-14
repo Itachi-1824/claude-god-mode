@@ -1,13 +1,26 @@
 {
   "_comment": "Merge into ~/.claude/settings.json under hooks key",
   "hooks": {
+    "UserPromptSubmit": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "INPUT=$(cat); PROMPT=$(echo \"$INPUT\" | python3 -c \"import sys,json; print(json.load(sys.stdin).get('prompt',''))\" 2>/dev/null); if echo \"$PROMPT\" | grep -qEi '(AKIA[A-Z0-9]{16}|ghp_[a-zA-Z0-9]{36}|sk-[a-zA-Z0-9]{20,}|glpat-[a-zA-Z0-9-]{20})'; then echo '[SECRET IN PROMPT] Possible secret pasted into prompt. Remove before continuing.' >&2; exit 2; fi",
+            "timeout": 3000
+          }
+        ]
+      }
+    ],
     "PreToolUse": [
       {
         "matcher": "Grep|Glob",
         "hooks": [
           {
             "type": "command",
-            "command": "echo '[TOKEN SAVE] Consider using codebase-memory MCP tools (search_graph, search_code, trace_path) instead of Grep/Glob. The knowledge graph is faster and uses 99% fewer tokens. Only proceed with Grep/Glob if the graph does not cover this query.'"
+            "command": "echo '[TOKEN SAVE] Consider using codebase-memory MCP tools (search_graph, search_code, trace_path) instead of Grep/Glob. The knowledge graph is faster and uses 99% fewer tokens. Only proceed with Grep/Glob if the graph does not cover this query.'",
+            "timeout": 2000
           }
         ]
       },
@@ -16,7 +29,8 @@
         "hooks": [
           {
             "type": "command",
-            "command": "CMD=$(cat | python3 -c \"import sys,json; print(json.load(sys.stdin).get('tool_input',{}).get('command',''))\" 2>/dev/null); if echo \"$CMD\" | grep -qEi '(rm\\s+-rf\\s+[/~]|git\\s+reset\\s+--hard|git\\s+push\\s+--force|DROP\\s+TABLE|DROP\\s+DATABASE|kubectl\\s+delete|docker\\s+system\\s+prune\\s+-a)'; then echo '[BLOCKED] Destructive command detected. Review carefully before proceeding.' >&2; exit 2; fi"
+            "command": "CMD=$(cat | python3 -c \"import sys,json; print(json.load(sys.stdin).get('tool_input',{}).get('command',''))\" 2>/dev/null); if echo \"$CMD\" | grep -qEi '(rm\\s+-rf\\s+[/~]|git\\s+reset\\s+--hard|git\\s+push\\s+--force|DROP\\s+TABLE|DROP\\s+DATABASE|kubectl\\s+delete|docker\\s+system\\s+prune\\s+-a|format\\s+[A-Z]:)'; then echo '[BLOCKED] Destructive command detected. Review carefully before proceeding.' >&2; exit 2; fi",
+            "timeout": 3000
           }
         ]
       },
@@ -25,19 +39,52 @@
         "hooks": [
           {
             "type": "command",
-            "command": "CONTENT=$(cat | python3 -c \"import sys,json; d=json.load(sys.stdin).get('tool_input',{}); print(d.get('content','') + d.get('new_string',''))\" 2>/dev/null); if echo \"$CONTENT\" | grep -qEi '(sk-[a-zA-Z0-9]{20,}|AKIA[A-Z0-9]{16}|ghp_[a-zA-Z0-9]{36}|glpat-[a-zA-Z0-9-]{20}|Bearer\\s+[a-zA-Z0-9._-]{20,})'; then echo '[SECRET DETECTED] Possible API key or token in file content. Use environment variables instead.' >&2; exit 2; fi"
+            "command": "CONTENT=$(cat | python3 -c \"import sys,json; d=json.load(sys.stdin).get('tool_input',{}); print(d.get('content','') + d.get('new_string',''))\" 2>/dev/null); if echo \"$CONTENT\" | grep -qEi '(sk-[a-zA-Z0-9]{20,}|AKIA[A-Z0-9]{16}|ghp_[a-zA-Z0-9]{36}|glpat-[a-zA-Z0-9-]{20}|Bearer\\s+[a-zA-Z0-9._-]{20,}|xoxb-[a-zA-Z0-9-]{50,}|ya29\\.[a-zA-Z0-9._-]{50,})'; then echo '[SECRET DETECTED] Possible API key or token in file content. Use environment variables instead.' >&2; exit 2; fi",
+            "timeout": 3000
+          }
+        ]
+      },
+      {
+        "matcher": "Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash ~/.claude/bin/check-orphan.sh",
+            "timeout": 5000
           }
         ]
       }
     ],
     "PostToolUse": [
       {
+        "matcher": "Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "INPUT=$(cat); FILE=$(echo \"$INPUT\" | python3 -c \"import sys,json; d=json.load(sys.stdin).get('tool_input',{}); print(d.get('file_path', d.get('path','')))\" 2>/dev/null); if [ -n \"$FILE\" ]; then case \"$FILE\" in *.py) python3 -m ruff check --fix \"$FILE\" 2>/dev/null || true ;; *.ts|*.tsx|*.js|*.jsx|*.json) npx --yes biome check --write \"$FILE\" 2>/dev/null || true ;; *.go) gofumpt -w \"$FILE\" 2>/dev/null || true ;; *.rs) rustfmt \"$FILE\" 2>/dev/null || true ;; esac; fi",
+            "timeout": 15000,
+            "async": true
+          }
+        ]
+      },
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "INPUT=$(cat); FILE=$(echo \"$INPUT\" | python3 -c \"import sys,json; d=json.load(sys.stdin).get('tool_input',{}); print(d.get('file_path', d.get('path','')))\" 2>/dev/null); if [ -n \"$FILE\" ]; then case \"$FILE\" in *.py) python3 -m pyright \"$FILE\" 2>&1 | tail -5 || true ;; *.ts|*.tsx) npx tsc --noEmit --skipLibCheck 2>&1 | head -10 || true ;; *.go) go vet ./... 2>&1 | head -10 || true ;; *.rs) cargo check 2>&1 | tail -10 || true ;; esac; fi",
+            "timeout": 20000,
+            "async": true
+          }
+        ]
+      },
+      {
         "matcher": "Edit|Write|Bash",
         "hooks": [
           {
             "type": "command",
             "command": "C:\\Users\\mdakh\\.local\\bin\\codebase-memory-mcp.exe index 2>/dev/null || true",
-            "timeout": 5000,
+            "timeout": 8000,
             "async": true
           }
         ]
@@ -48,17 +95,8 @@
           {
             "type": "command",
             "command": "graphify update --quiet 2>/dev/null || true",
-            "timeout": 5000,
+            "timeout": 8000,
             "async": true
-          }
-        ]
-      },
-      {
-        "matcher": "Task",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "cozempic checkpoint 2>/dev/null || true"
           }
         ]
       },
@@ -67,7 +105,21 @@
         "hooks": [
           {
             "type": "command",
-            "command": "cozempic checkpoint 2>/dev/null || true"
+            "command": "cozempic checkpoint 2>/dev/null || true",
+            "timeout": 5000
+          }
+        ]
+      }
+    ],
+    "SubagentStop": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "cozempic checkpoint 2>/dev/null || true",
+            "timeout": 5000,
+            "async": true
           }
         ]
       }
@@ -78,7 +130,8 @@
         "hooks": [
           {
             "type": "command",
-            "command": "INPUT=$(cat); SESSION_ID=$(echo \"$INPUT\" | python3 -c \"import sys,json; print(json.load(sys.stdin).get('session_id',''))\" 2>/dev/null); TRANSCRIPT=$(echo \"$INPUT\" | python3 -c \"import sys,json; print(json.load(sys.stdin).get('transcript_path',''))\" 2>/dev/null); cozempic guard --daemon ${SESSION_ID:+--session $SESSION_ID} 2>/dev/null || true; cozempic digest inject ${TRANSCRIPT:+--session $TRANSCRIPT} 2>/dev/null || true"
+            "command": "INPUT=$(cat); SESSION_ID=$(echo \"$INPUT\" | python3 -c \"import sys,json; print(json.load(sys.stdin).get('session_id',''))\" 2>/dev/null); TRANSCRIPT=$(echo \"$INPUT\" | python3 -c \"import sys,json; print(json.load(sys.stdin).get('transcript_path',''))\" 2>/dev/null); cozempic guard --daemon ${SESSION_ID:+--session $SESSION_ID} 2>/dev/null || true; cozempic digest inject ${TRANSCRIPT:+--session $TRANSCRIPT} 2>/dev/null || true",
+            "timeout": 10000
           }
         ]
       }
@@ -89,7 +142,8 @@
         "hooks": [
           {
             "type": "command",
-            "command": "TRANSCRIPT=$(cat | python3 -c \"import sys,json; print(json.load(sys.stdin).get('transcript_path',''))\" 2>/dev/null); cozempic checkpoint 2>/dev/null || true; cozempic digest flush ${TRANSCRIPT:+--session $TRANSCRIPT} 2>/dev/null || true"
+            "command": "TRANSCRIPT=$(cat | python3 -c \"import sys,json; print(json.load(sys.stdin).get('transcript_path',''))\" 2>/dev/null); cozempic checkpoint 2>/dev/null || true; cozempic digest flush ${TRANSCRIPT:+--session $TRANSCRIPT} 2>/dev/null || true",
+            "timeout": 10000
           }
         ]
       }
@@ -100,7 +154,8 @@
         "hooks": [
           {
             "type": "command",
-            "command": "cozempic post-compact 2>/dev/null || true; cozempic digest inject 2>/dev/null || true"
+            "command": "cozempic post-compact 2>/dev/null || true; cozempic digest inject 2>/dev/null || true",
+            "timeout": 10000
           }
         ]
       }
@@ -111,7 +166,13 @@
         "hooks": [
           {
             "type": "command",
-            "command": "TRANSCRIPT=$(cat | python3 -c \"import sys,json; print(json.load(sys.stdin).get('transcript_path',''))\" 2>/dev/null); cozempic checkpoint 2>/dev/null || true; cozempic digest flush ${TRANSCRIPT:+--session $TRANSCRIPT} 2>/dev/null || true"
+            "command": "INPUT=$(cat); if [ \"$(echo \"$INPUT\" | python3 -c \"import sys,json; print(json.load(sys.stdin).get('stop_hook_active','false'))\" 2>/dev/null)\" = \"true\" ]; then exit 0; fi; TRANSCRIPT=$(echo \"$INPUT\" | python3 -c \"import sys,json; print(json.load(sys.stdin).get('transcript_path',''))\" 2>/dev/null); cozempic checkpoint 2>/dev/null || true; cozempic digest flush ${TRANSCRIPT:+--session $TRANSCRIPT} 2>/dev/null || true",
+            "timeout": 15000
+          },
+          {
+            "type": "command",
+            "command": "bash ~/.claude/bin/require-connected-code.sh",
+            "timeout": 15000
           }
         ]
       }

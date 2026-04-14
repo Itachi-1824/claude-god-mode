@@ -2,13 +2,13 @@
   <h1 align="center">&#x1F451; Claude God Mode</h1>
   <p align="center">
     <strong>The ultimate Claude Code optimization toolkit.</strong><br/>
-    15 AI agents &#x2022; Autonomous token pipeline &#x2022; 60-99% token savings &#x2022; Opus-level reasoning &#x2022; Elite UI design
+    14 AI agents &#x2022; Autonomous token pipeline &#x2022; 60-99% token savings &#x2022; Opus-level reasoning &#x2022; Elite UI design
   </p>
   <p align="center">
     <a href="#-quick-start"><img src="https://img.shields.io/badge/setup-2%20minutes-brightgreen?style=flat-square" alt="Setup Time"></a>
     <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-blue?style=flat-square" alt="License"></a>
     <a href="#-token-savings"><img src="https://img.shields.io/badge/token%20savings-60--99%25-orange?style=flat-square" alt="Token Savings"></a>
-    <a href="#-agents"><img src="https://img.shields.io/badge/agents-15-purple?style=flat-square" alt="Agents"></a>
+    <a href="#-agents"><img src="https://img.shields.io/badge/agents-14-purple?style=flat-square" alt="Agents"></a>
     <img src="https://img.shields.io/badge/platform-Windows%20%7C%20macOS%20%7C%20Linux-lightgrey?style=flat-square" alt="Platform">
   </p>
 </p>
@@ -44,7 +44,7 @@ Claude sees ONLY what it needs
 ```
 
 ### Quality Agents (On-Demand)
-15 specialized agents that push Claude's reasoning to its ceiling.
+14 specialized agents that push Claude's reasoning to its ceiling.
 
 | Agent | What It Does |
 |-------|-------------|
@@ -52,8 +52,7 @@ Claude sees ONLY what it needs
 | &#x1F534; `red-team` | Attacks your **stated security assumptions** |
 | &#x1F7E3; `architect` | System design + ADRs, **never writes code** |
 | &#x1F535; `tree-of-thought` | Explores **3+ approaches** before committing |
-| &#x1F7E0; `rise-refiner` | Generate &#x2192; Critique &#x2192; Fix &#x2192; Compare loop |
-| &#x1F535; `constitutional-reviewer` | 4-pass: write &#x2192; critique &#x2192; rewrite &#x2192; verify |
+| &#x1F535; `constitutional-reviewer` | Multi-pass: write &#x2192; critique &#x2192; rewrite &#x2192; verify (surgical + systematic modes) |
 | &#x1F7E1; `ensemble-judge` | Picks the **best** from competing solutions |
 | &#x1F7E2; `socratic-questioner` | 6 mandatory questions **before** any code |
 | &#x1F7E2; `hypothesis-tester` | Property-based tests with 1000+ random inputs |
@@ -163,7 +162,7 @@ Multi-depth research with 7 levels: `surface`, `basic`, `deep`, `in-depth`, `ult
 
 | Component | Location | Purpose |
 |-----------|----------|---------|
-| 15 agents | `~/.claude/agents/` | Quality + reasoning + UI design patterns |
+| 14 agents | `~/.claude/agents/` | Quality + reasoning + UI design patterns |
 | CLAUDE.md | `~/.claude/CLAUDE.md` | Lean config (~60 lines) |
 | Hooks | `~/.claude/settings.json` | Auto-index, auto-prune, graph-first nudge |
 | MCP servers | `~/.claude.json` | Code graph, context sandbox, UI libraries |
@@ -255,7 +254,7 @@ Prevents Claude from reading `node_modules/`, `dist/`, build artifacts, etc.
   +-  CLAUDE.md              59 lines, ~1.2k tokens (was 252 lines / 3.6k)
   +-  settings.json          Hooks: PreToolUse, PostToolUse, SessionStart,
   |                          PreCompact, PostCompact, Stop
-  +-  agents/                15 specialized agents (on-demand, not always loaded)
+  +-  agents/                14 specialized agents (on-demand, not always loaded)
   +-  skills/                Plugin skills (graphify, caveman, etc.)
   +-  plugins/               Enabled: pyright-lsp, rust-analyzer-lsp, semgrep,
   |                          context7, claude-mem, superpowers, ECC, caveman

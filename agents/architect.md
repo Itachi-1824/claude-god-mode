@@ -1,7 +1,7 @@
 ---
 name: architect
 description: System architecture specialist for design decisions, ADRs, and technical trade-offs. Use PROACTIVELY when planning new features, refactoring large systems, or making architectural decisions. Never writes implementation code.
-tools: Read, Grep, Glob
+tools: Read, Grep, Glob, Bash
 model: opus
 effort: max
 maxTurns: 20

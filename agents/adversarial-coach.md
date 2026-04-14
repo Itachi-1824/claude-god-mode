@@ -1,6 +1,6 @@
 ---
 name: adversarial-coach
-description: Adversarial code reviewer that tries to BREAK code, not validate it. Use immediately after implementation to find bugs, edge cases, and failures that collaborative review misses. Proactively use after any significant code change.
+description: Adversarial code reviewer that tries to BREAK code, not validate it. Use immediately after implementation to find bugs, edge cases, and failures that collaborative review misses. Proactively use after any significant code change. NOT for security-specific review (use red-team for that).
 tools: Read, Grep, Glob, Bash
 model: opus
 effort: high

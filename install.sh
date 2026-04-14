@@ -327,6 +327,62 @@ else
   fi
 fi
 
+# ── Step 5b: UI/Design MCP Servers ─────────────────────────
+echo ""
+echo -e "  ${BOLD}Step 5b: UI/Design MCP Servers${NC}"
+echo ""
+info "These give Claude access to component libraries and visual feedback."
+echo ""
+
+# 21st.dev Magic
+if ask "Install 21st.dev Magic MCP? (AI component generation — needs free API key from 21st.dev)"; then
+  add_mcp "21st-dev-magic" "npx" '["-y","@21st-dev/magic@latest"]'
+  warn "Set your API key: edit ~/.claude.json → mcpServers → 21st-dev-magic → env → API_KEY"
+fi
+
+# shadcn/ui
+if ask "Install shadcn/ui MCP? (official component registry, zero hallucinations)"; then
+  add_mcp "shadcn" "npx" '["-y","mcp-remote","https://www.shadcn.io/api/mcp"]'
+fi
+
+# Magic UI
+if ask "Install Magic UI MCP? (60+ animated components — beams, particles, meteors)"; then
+  add_mcp "magicui" "npx" '["-y","magicui-mcp"]'
+fi
+
+# Animotion
+if ask "Install Animotion MCP? (745 CSS animations + 9000 SVG icons)"; then
+  add_mcp "animotion" "npx" '["-y","animotion-mcp"]'
+fi
+
+# Aceternity UI
+if ask "Install Aceternity UI MCP? (200+ cinematic, 3D, parallax components)"; then
+  add_mcp "aceternity" "npx" '["-y","aceternityui-mcp@latest"]'
+fi
+
+# Dembrandt
+if ask "Install Dembrandt MCP? (extract design tokens from any website)"; then
+  add_mcp "dembrandt" "npx" '["-y","dembrandt-mcp"]'
+fi
+
+# Glance (headless by default)
+if ask "Install Glance MCP? (browser screenshots — Claude sees what it built)"; then
+  python3 -c "
+import json, os
+path = os.path.expanduser('~/.claude.json')
+try:
+    with open(path) as f: d = json.load(f)
+except: d = {}
+if 'mcpServers' not in d: d['mcpServers'] = {}
+if 'glance' not in d['mcpServers']:
+    d['mcpServers']['glance'] = {'type': 'stdio', 'command': 'npx', 'args': ['-y', 'glance-mcp'], 'env': {'BROWSER_HEADLESS': 'true', 'BROWSER_LAZY': 'true'}}
+    with open(path, 'w') as f: json.dump(d, f, indent=2)
+    print('  [+] Added MCP: glance (headless mode)')
+else:
+    print('  [*] MCP already configured: glance')
+" 2>/dev/null
+fi
+
 # ── Step 6: Environment ───────────────────────────────────
 echo -e "\n  ${BOLD}Step 6/7: Environment${NC}"
 

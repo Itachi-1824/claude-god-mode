@@ -2,13 +2,13 @@
   <h1 align="center">&#x1F451; Claude God Mode</h1>
   <p align="center">
     <strong>The ultimate Claude Code optimization toolkit.</strong><br/>
-    13 AI agents &#x2022; Autonomous token pipeline &#x2022; 60-99% token savings &#x2022; Opus-level reasoning &#x2022; Elite UI design
+    15 AI agents &#x2022; Autonomous token pipeline &#x2022; 60-99% token savings &#x2022; Opus-level reasoning &#x2022; Elite UI design
   </p>
   <p align="center">
     <a href="#-quick-start"><img src="https://img.shields.io/badge/setup-2%20minutes-brightgreen?style=flat-square" alt="Setup Time"></a>
     <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-blue?style=flat-square" alt="License"></a>
     <a href="#-token-savings"><img src="https://img.shields.io/badge/token%20savings-60--99%25-orange?style=flat-square" alt="Token Savings"></a>
-    <a href="#-agents"><img src="https://img.shields.io/badge/agents-13-purple?style=flat-square" alt="Agents"></a>
+    <a href="#-agents"><img src="https://img.shields.io/badge/agents-15-purple?style=flat-square" alt="Agents"></a>
     <img src="https://img.shields.io/badge/platform-Windows%20%7C%20macOS%20%7C%20Linux-lightgrey?style=flat-square" alt="Platform">
   </p>
 </p>
@@ -44,7 +44,7 @@ Claude sees ONLY what it needs
 ```
 
 ### Quality Agents (On-Demand)
-13 specialized agents that push Claude's reasoning to its ceiling.
+15 specialized agents that push Claude's reasoning to its ceiling.
 
 | Agent | What It Does |
 |-------|-------------|
@@ -61,6 +61,8 @@ Claude sees ONLY what it needs
 | &#x1F7E6; `researcher` | Multi-depth research: `surface` to `overkill` |
 | &#x1F7E3; `ui-architect` | **Auto-triggers on frontend tasks.** Fetches from component libraries, adds animations |
 | &#x1F7E3; `design-critic` | **Auto-critiques UI** after implementation. Scores visual quality 1-10 |
+| &#x1F7E0; `integration-enforcer` | Verifies new code is **actually wired** into the running system |
+| &#x1F7E1; `test-authenticator` | Catches **fake tests** — mock theater, tautologies, happy-path-only |
 
 ## &#x1F680; Quick Start
 
@@ -161,7 +163,7 @@ Multi-depth research with 7 levels: `surface`, `basic`, `deep`, `in-depth`, `ult
 
 | Component | Location | Purpose |
 |-----------|----------|---------|
-| 13 agents | `~/.claude/agents/` | Quality + reasoning + UI design patterns |
+| 15 agents | `~/.claude/agents/` | Quality + reasoning + UI design patterns |
 | CLAUDE.md | `~/.claude/CLAUDE.md` | Lean config (~60 lines) |
 | Hooks | `~/.claude/settings.json` | Auto-index, auto-prune, graph-first nudge |
 | MCP servers | `~/.claude.json` | Code graph, context sandbox, UI libraries |
@@ -253,7 +255,7 @@ Prevents Claude from reading `node_modules/`, `dist/`, build artifacts, etc.
   +-  CLAUDE.md              59 lines, ~1.2k tokens (was 252 lines / 3.6k)
   +-  settings.json          Hooks: PreToolUse, PostToolUse, SessionStart,
   |                          PreCompact, PostCompact, Stop
-  +-  agents/                13 specialized agents (on-demand, not always loaded)
+  +-  agents/                15 specialized agents (on-demand, not always loaded)
   +-  skills/                Plugin skills (graphify, caveman, etc.)
   +-  plugins/               Enabled: pyright-lsp, rust-analyzer-lsp, semgrep,
   |                          context7, claude-mem, superpowers, ECC, caveman

@@ -41,6 +41,24 @@ Commit format: `<type>: <description>` (feat, fix, refactor, docs, test, chore, 
 ## Code Graph (codebase-memory-mcp)
 **ALWAYS query the knowledge graph BEFORE using Grep/Glob/Read.** Use `search_symbols` for code search, `trace_dependencies` for impact analysis, `get_architecture` for codebase overview. Say "index this project" to build the graph. Fall back to file tools only when graph doesn't cover it.
 
+## Code Connectivity (CRITICAL — the #1 AI failure mode)
+- NEVER write a file without immediately wiring it into the system
+- After creating ANY new module/function/component, show WHERE it's imported and called
+- After creating ANY new endpoint, show the router registration line
+- After creating ANY new component, show the parent that renders it
+- Before claiming done, trace the FULL call chain: user action -> handler -> service -> storage
+- Use `find_referencing_symbols` (serena) or `trace_path` (codebase-memory) to verify connectivity
+- If new code has zero callers = NOT DONE. Wire it up or delete it
+
+## Testing (REAL tests, not theater)
+- Integration tests > unit tests. Test the RUNNING system, not mocked fantasies
+- Max 2 mocks per test. Never mock the system under test itself
+- Every test must have behavioral assertions — not `toBeTruthy()` or `toBe(x)` where x is the input
+- Write the FAILING integration test FIRST, then implement to make it pass
+- Tests must fail if the feature is removed — if they still pass, the test is fake
+- For APIs: test with real HTTP (supertest/reqwest/httptest), not mocked handlers
+- For DB: use real schema (testcontainers/migrations), not in-memory fakes
+
 ## Verification (NEVER skip)
 - Run tests and show output before marking ANY task complete
 - Run type checker (pyright/tsc/cargo check) and show 0 errors

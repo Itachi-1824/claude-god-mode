@@ -19,10 +19,10 @@ AI writes beautiful code that compiles and passes unit tests but is NEVER CALLED
 - Check `git diff --name-only` for newly created or modified files
 - For each new file: what functions/classes/components does it export?
 
-## Step 2: Trace Connectivity (use serena + codebase-memory)
+## Step 2: Trace Connectivity (use serena + jCodeMunch)
 For EACH new export, verify it has at least one caller:
 - Use `find_referencing_symbols` (serena) to find all references
-- Use `trace_path` or `query_graph` (codebase-memory) to verify reachability from entrypoint
+- Use jCodeMunch semantic search to verify the symbol is used elsewhere
 - If zero references found → FLAG AS DISCONNECTED
 
 ## Step 3: Verify Registration
@@ -81,4 +81,4 @@ VERDICT: [CONNECTED | DISCONNECTED — fix: ___]
 - A file that only exports but is never imported is dead code.
 - Every new endpoint MUST be traceable from app entrypoint.
 - Every new component MUST be rendered somewhere.
-- Use serena and codebase-memory — don't guess. VERIFY with tools.
+- Use serena and jCodeMunch — don't guess. VERIFY with tools.

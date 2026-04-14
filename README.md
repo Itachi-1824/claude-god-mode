@@ -176,7 +176,7 @@ The installer asks before installing each of these:
 | Tool | What | Install |
 |------|------|---------|
 | RTK | CLI output compression | `cargo install --git https://github.com/rtk-ai/rtk` |
-| codebase-memory | Code knowledge graph | Binary download |
+| jCodeMunch | Lightweight code indexing | `pip install jcodemunch-mcp` |
 | Context Mode | Tool output sandboxing | `npm install -g context-mode` |
 | MCP Compressor | MCP response compression | `pip install mcp-compressor` |
 | Cozempic | Context auto-pruning | `pip install cozempic` |
@@ -223,14 +223,8 @@ God Mode turns Claude into an elite frontend designer with autonomous visual fee
 
 After installing God Mode globally, each new project needs:
 
-### 1. Code Graph (one-time per repo)
-```bash
-# In your project directory, tell Claude:
-"index this project"
-# Or manually:
-codebase-memory-mcp index
-```
-The graph auto-updates via PostToolUse hooks after every file edit.
+### 1. Code Index (automatic)
+jCodeMunch indexes your project automatically when Claude navigates code via its MCP tools. No manual setup needed.
 
 ### 2. Graphify (one-time per repo)
 ```bash

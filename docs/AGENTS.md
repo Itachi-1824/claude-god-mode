@@ -183,3 +183,13 @@ Elite UI/UX architect. Fetches real components from 21st.dev, shadcn, magicui, a
 | **Use when** | After any frontend implementation — auto-triggers |
 
 Visual design reviewer that scores UI output 1-10 across layout, color, interactivity, animation, responsiveness, and polish. Every issue includes specific file:element references and fix suggestions. If score < 6, suggests component library alternatives.
+
+### spec-interviewer
+| | |
+|---|---|
+| **Model** | Opus |
+| **Effort** | High |
+| **Max Turns** | 60 |
+| **Use when** | Before any non-trivial feature implementation |
+
+Interviews you using AskUserQuestion before writing any code. Runs silent recon first (reads package.json, scans directory structure, reads 3-5 relevant files), then asks 5 rounds of probing questions about requirements, edge cases, constraints, UX, and error handling. Produces a structured SPEC.md with acceptance criteria, files to modify, wiring checklist, and API contracts — executable by a fresh session without re-reading the codebase.

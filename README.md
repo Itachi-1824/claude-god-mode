@@ -56,8 +56,9 @@ Claude sees ONLY what it needs
 | &#x1F7E1; `ensemble-judge` | Picks the **best** from competing solutions |
 | &#x1F7E2; `socratic-questioner` | 6 mandatory questions **before** any code |
 | &#x1F7E2; `hypothesis-tester` | Property-based tests with 1000+ random inputs |
-| &#x1F535; `multi-perspective-reviewer` | 3 isolated passes: security, perf, coverage |
+| &#x1F535; `multi-perspective-reviewer` | 4 isolated passes: security, perf, coverage, correctness |
 | &#x1F7E6; `researcher` | Multi-depth research: `surface` to `overkill` |
+| &#x1F7E2; `spec-interviewer` | Interviews you **before** implementation, produces bulletproof SPEC.md |
 | &#x1F7E3; `ui-architect` | **Auto-triggers on frontend tasks.** Fetches from component libraries, adds animations |
 | &#x1F7E3; `design-critic` | **Auto-critiques UI** after implementation. Scores visual quality 1-10 |
 | &#x1F7E0; `integration-enforcer` | Verifies new code is **actually wired** into the running system |
@@ -247,22 +248,44 @@ cp ~/.claude-god-mode/.claudeignore.template /path/to/project/.claudeignore
 ```
 Prevents Claude from reading `node_modules/`, `dist/`, build artifacts, etc.
 
+## &#x1F6E1;&#xFE0F; Safety &amp; Automation
+
+### Hook Scripts (`~/.claude/bin/`)
+| Script | What It Does |
+|--------|-------------|
+| `check-orphan.sh` | Detects files with zero import references (advisory) |
+| `require-connected-code.sh` | **Blocks "done"** if new code has zero callers |
+| `loop-guard.sh` | Escalating guidance on 3+ consecutive identical failures |
+| `session-handover.sh` | Auto-writes HANDOVER.md on session end (git state, decisions, next steps) |
+| `session-resume.sh` | Auto-reads HANDOVER.md on session start for continuity |
+| `status-bar.sh` | Context-usage color bar (green &lt;40%, yellow 40-59%, red 60%+) |
+
+### Safety Hooks (Deterministic)
+| Hook | Trigger | Effect |
+|------|---------|--------|
+| Secret scanner | UserPromptSubmit + Write/Edit | **Blocks** secrets in prompts and files |
+| Destructive command guard | Bash | **Blocks** `rm -rf /`, `git reset --hard`, `DROP TABLE`, etc. |
+| `--no-verify` block | Bash(git commit*) | **Blocks** hook bypass attempts |
+| Branch protection | Bash(git commit*) | **Warns** on commits to main/master |
+| Orphan detector | Edit | Warns on files with zero references |
+| Connectivity gate | Stop | **Blocks** completion if code is disconnected |
+| Loop guard | Bash (PostToolUse) | Escalating guidance on stuck loops |
+
 ## &#x1F3D7;&#xFE0F; Architecture
 
 ```
 ~/.claude/
-  +-  CLAUDE.md              59 lines, ~1.2k tokens (was 252 lines / 3.6k)
-  +-  settings.json          Hooks: PreToolUse, PostToolUse, SessionStart,
-  |                          PreCompact, PostCompact, Stop
-  +-  agents/                15 specialized agents (on-demand, not always loaded)
+  +-  CLAUDE.md              ~80 lines (lean, connectivity + testing rules)
+  +-  settings.json          17 hooks across 8 lifecycle events
+  +-  agents/                15 specialized agents (on-demand, 0 tokens when unused)
+  +-  bin/                   6 hook scripts (safety, handover, loop guard)
   +-  skills/                Plugin skills (graphify, caveman, etc.)
-  +-  plugins/               Enabled: pyright-lsp, rust-analyzer-lsp, semgrep,
-  |                          context7, claude-mem, superpowers, ECC, caveman
+  +-  plugins/               11 enabled (LSP, security, design, memory, skills)
   +-  projects/              Per-project memory and config
 
-~/.claude.json               User MCP: codebase-memory, context-mode, headroom,
-                             serena, docfork, 21st-dev-magic, shadcn, magicui,
-                             animotion, dembrandt, aceternity, glance
+~/.claude.json               12 MCP servers: codebase-memory, context-mode,
+                             headroom, serena, docfork, 21st-dev-magic, shadcn,
+                             magicui, animotion, dembrandt, aceternity, glance
 ```
 
 ## &#x1F4AC; Philosophy

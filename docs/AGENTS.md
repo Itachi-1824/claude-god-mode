@@ -55,25 +55,15 @@ Produces Architecture Decision Records (ADRs). Always compares 3+ approaches bef
 
 Mandatory 4-phase process: Decompose, Branch (min 3 approaches), Evaluate, Select. The critical constraint: "Do not start implementing until you have explicitly compared all branches." Prevents satisficing (committing to the first viable path).
 
-### rise-refiner
-| | |
-|---|---|
-| **Model** | Opus |
-| **Effort** | High |
-| **Max Turns** | 20 |
-| **Use when** | Critical implementations needing maximum quality |
-
-RISE = Recursive Iterative Self-Evaluation. Generate solution, critique exactly 3 weaknesses, fix ONLY those 3 (no scope creep), then compare before/after. Research shows 17-24% improvement. Max 2 iterations to prevent diminishing returns.
-
 ### constitutional-reviewer
 | | |
 |---|---|
 | **Model** | Opus |
 | **Effort** | High |
-| **Max Turns** | 20 |
-| **Use when** | Critical code paths — auth, billing, data pipelines |
+| **Max Turns** | 30 |
+| **Use when** | Critical code paths — auth, billing, data pipelines, core business logic |
 
-4-pass structured review: Write, Critique (against 6 principles), Rewrite (fix violations), Verify (confirm all resolved). Must find at least 1 issue — if zero found, the review wasn't thorough enough.
+Multi-pass self-review with two modes. **Surgical mode** (default): find exactly 3 weaknesses, fix only those, compare before/after (17-24% improvement). **Systematic mode**: review against 6 constitutional principles (correctness, security, performance, error handling, concurrency, testability). Merges the former rise-refiner into one agent.
 
 ### ensemble-judge
 | | |

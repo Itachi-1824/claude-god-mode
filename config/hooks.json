@@ -19,7 +19,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "echo '[TOKEN SAVE] Consider using codebase-memory MCP tools (search_graph, search_code, trace_path) instead of Grep/Glob. The knowledge graph is faster and uses 99% fewer tokens. Only proceed with Grep/Glob if the graph does not cover this query.'",
+            "command": "echo '[TOKEN SAVE] Consider using serena MCP tools (find_symbol, find_referencing_symbols, get_symbols_overview) instead of Grep/Glob. LSP-powered search is faster and more accurate. Only proceed with Grep/Glob if serena does not cover this query.'",
             "timeout": 2000
           }
         ]
@@ -62,17 +62,6 @@
       }
     ],
     "PostToolUse": [
-      {
-        "matcher": "Edit|Write",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "C:\\Users\\mdakh\\.local\\bin\\codebase-memory-mcp.exe index 2>/dev/null || true",
-            "timeout": 8000,
-            "async": true
-          }
-        ]
-      },
       {
         "matcher": "TaskCreate|TaskUpdate",
         "hooks": [

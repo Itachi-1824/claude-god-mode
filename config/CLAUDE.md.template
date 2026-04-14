@@ -47,7 +47,7 @@ Commit format: `<type>: <description>` (feat, fix, refactor, docs, test, chore, 
 - After creating ANY new module/function/component, show WHERE it's imported and called
 - After creating ANY new endpoint, show the router registration line
 - After creating ANY new component, show the parent that renders it
-- Use `find_referencing_symbols` (serena MCP) or `trace_path` (codebase-memory) to verify connectivity
+- Use `find_referencing_symbols` (serena MCP) or jCodeMunch semantic search to verify connectivity
 - If new code has zero callers = NOT DONE. Wire it up or delete it
 - Before claiming done, show this trace:
   ENTRY: [main/router/CLI] -> ROUTE -> HANDLER -> SERVICE -> STORAGE
@@ -62,6 +62,33 @@ Commit format: `<type>: <description>` (feat, fix, refactor, docs, test, chore, 
 - Tests must fail if the feature is removed — if they still pass, the test is fake
 - For APIs: test with real HTTP (supertest/reqwest/httptest), not mocked handlers
 - For DB: use real schema (testcontainers/migrations), not in-memory fakes
+
+## IMPORTANT: USE YOUR TOOLS — NEVER SKIP (the user WILL notice)
+You have 15 agents, 12 MCP servers, and dozens of skills. USE THEM. Not using them is a failure.
+
+**MANDATORY agent usage — these are NOT optional:**
+- After writing/modifying code → launch `code-reviewer` agent (or `adversarial-coach` for critical code)
+- For auth/billing/API/security code → launch `security-reviewer` agent AND `red-team` agent
+- Before non-trivial implementation → launch `spec-interviewer` or `socratic-questioner` agent
+- For complex decisions → launch `architect` or `tree-of-thought` agent
+- After writing tests → launch `test-authenticator` agent to verify tests are real
+- After UI work → launch `design-critic` agent
+- After any new feature → launch `integration-enforcer` agent to verify wiring
+- For research → launch `researcher` agent (not manual web searches)
+
+**MANDATORY MCP usage:**
+- For code search → use serena `find_symbol`/`find_referencing_symbols` or jCodeMunch `search_symbols` — NOT Grep
+- For library docs → use docfork `search_docs`/`fetch_doc` — NOT web search
+- For UI components → use 21st-dev-magic, shadcn, magicui, animotion, aceternity MCPs — NOT writing from scratch
+- For screenshots → use glance `browser_screenshot` — NOT guessing from code
+
+**MANDATORY skill usage:**
+- Before coding → `/plan` or `/search-first`
+- During coding → `/tdd` for test-first
+- After coding → `/code-review` then `/verify`
+- For security → `/security-review` and `/security-scan`
+
+**If you skip any of these, the user will ask you to redo the work with the proper tools. Save time — use them the first time.**
 
 ## Verification (NEVER skip)
 - Run tests and show output before marking ANY task complete

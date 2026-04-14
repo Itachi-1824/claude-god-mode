@@ -63,22 +63,11 @@
     ],
     "PostToolUse": [
       {
-        "matcher": "Edit|Write|Bash",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "C:\\Users\\mdakh\\.local\\bin\\codebase-memory-mcp.exe index 2>/dev/null || true",
-            "timeout": 8000,
-            "async": true
-          }
-        ]
-      },
-      {
         "matcher": "Edit|Write",
         "hooks": [
           {
             "type": "command",
-            "command": "graphify update --quiet 2>/dev/null || true",
+            "command": "C:\\Users\\mdakh\\.local\\bin\\codebase-memory-mcp.exe index 2>/dev/null || true",
             "timeout": 8000,
             "async": true
           }

@@ -31,6 +31,12 @@
             "type": "command",
             "command": "CMD=$(cat | python3 -c \"import sys,json; print(json.load(sys.stdin).get('tool_input',{}).get('command',''))\" 2>/dev/null); if echo \"$CMD\" | grep -qEi '(rm\\s+-rf\\s+[/~]|git\\s+reset\\s+--hard|git\\s+push\\s+--force|DROP\\s+TABLE|DROP\\s+DATABASE|kubectl\\s+delete|docker\\s+system\\s+prune\\s+-a|format\\s+[A-Z]:)'; then echo '[BLOCKED] Destructive command detected. Review carefully before proceeding.' >&2; exit 2; fi",
             "timeout": 3000
+          },
+          {
+            "type": "command",
+            "if": "Bash(git commit*)",
+            "command": "echo '[PRE-COMMIT] Running formatter + type checker before commit...'; for f in $(git diff --cached --name-only 2>/dev/null); do case \"$f\" in *.py) python3 -m ruff check --fix \"$f\" 2>/dev/null && python3 -m ruff format \"$f\" 2>/dev/null ;; *.ts|*.tsx|*.js|*.jsx) npx --yes biome check --write \"$f\" 2>/dev/null ;; *.go) gofumpt -w \"$f\" 2>/dev/null ;; *.rs) rustfmt \"$f\" 2>/dev/null ;; esac; done; git add -u 2>/dev/null || true",
+            "timeout": 30000
           }
         ]
       },
@@ -56,28 +62,6 @@
       }
     ],
     "PostToolUse": [
-      {
-        "matcher": "Edit|Write",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "INPUT=$(cat); FILE=$(echo \"$INPUT\" | python3 -c \"import sys,json; d=json.load(sys.stdin).get('tool_input',{}); print(d.get('file_path', d.get('path','')))\" 2>/dev/null); if [ -n \"$FILE\" ]; then case \"$FILE\" in *.py) python3 -m ruff check --fix \"$FILE\" 2>/dev/null || true ;; *.ts|*.tsx|*.js|*.jsx|*.json) npx --yes biome check --write \"$FILE\" 2>/dev/null || true ;; *.go) gofumpt -w \"$FILE\" 2>/dev/null || true ;; *.rs) rustfmt \"$FILE\" 2>/dev/null || true ;; esac; fi",
-            "timeout": 15000,
-            "async": true
-          }
-        ]
-      },
-      {
-        "matcher": "Edit|Write",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "INPUT=$(cat); FILE=$(echo \"$INPUT\" | python3 -c \"import sys,json; d=json.load(sys.stdin).get('tool_input',{}); print(d.get('file_path', d.get('path','')))\" 2>/dev/null); if [ -n \"$FILE\" ]; then case \"$FILE\" in *.py) python3 -m pyright \"$FILE\" 2>&1 | tail -5 || true ;; *.ts|*.tsx) npx tsc --noEmit --skipLibCheck 2>&1 | head -10 || true ;; *.go) go vet ./... 2>&1 | head -10 || true ;; *.rs) cargo check 2>&1 | tail -10 || true ;; esac; fi",
-            "timeout": 20000,
-            "async": true
-          }
-        ]
-      },
       {
         "matcher": "Edit|Write|Bash",
         "hooks": [

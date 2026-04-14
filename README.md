@@ -29,7 +29,7 @@ Your Prompt
     |
     +-  [RTK]               Bash output compressed 60-90%
     |
-    +-  [codebase-memory]   Code graph queries replace file reads (99%)
+    +-  [jCodeMunch]         Lightweight code indexing, 95%+ savings (50-150MB)
     |
     +-  [Context Mode]      Tool outputs sandboxed in SQLite (98%)
     |
@@ -98,7 +98,7 @@ Measured savings from real-world usage:
 | Layer | Tool | Savings | What It Targets |
 |-------|------|---------|-----------------|
 | CLI Output | [RTK](https://github.com/rtk-ai/rtk) | 60-90% | Bash command output noise |
-| Code Navigation | [codebase-memory](https://github.com/DeusData/codebase-memory-mcp) | 99% | File reads replaced by graph queries |
+| Code Navigation | [jCodeMunch](https://github.com/jgravelle/jcodemunch-mcp) | 95%+ | Lightweight tree-sitter indexing (50-150MB RAM) |
 | Tool Output | [Context Mode](https://github.com/mksglu/context-mode) | 98% | Tool output sandboxed, not dumped |
 | Data Compression | [MCP Compressor](https://github.com/atlassian-labs/mcp-compressor) | 70-95% | MCP responses compressed + TOON |
 | Context Pruning | [Cozempic](https://github.com/Ruya-AI/cozempic) | 30-70% | Stale context auto-cleaned |
@@ -283,7 +283,7 @@ Prevents Claude from reading `node_modules/`, `dist/`, build artifacts, etc.
   +-  plugins/               11 enabled (LSP, security, design, memory, skills)
   +-  projects/              Per-project memory and config
 
-~/.claude.json               12 MCP servers: codebase-memory, context-mode,
+~/.claude.json               12 MCP servers: jcodemunch, context-mode,
                              headroom, serena, docfork, 21st-dev-magic, shadcn,
                              magicui, animotion, dembrandt, aceternity, glance
 ```

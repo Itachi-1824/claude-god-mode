@@ -38,8 +38,8 @@ Commit format: `<type>: <description>` (feat, fix, refactor, docs, test, chore, 
 ## RTK (Rust Token Killer)
 **Always prefix Bash commands with `rtk`** for 60-90% token savings on output. RTK passes through unchanged if no filter exists — always safe to use. In chains: `rtk git add . && rtk git commit -m "msg"`. Use `rtk gain` to check savings stats.
 
-## Code Navigation (serena MCP)
-**Use serena's LSP tools BEFORE Grep/Glob/Read when possible.** Use `find_symbol` for code search, `find_referencing_symbols` for impact analysis, `get_symbols_overview` for file structure. Fall back to Grep/Glob/Read only when serena doesn't cover it.
+## Code Navigation (serena + jCodeMunch)
+**Use serena or jCodeMunch BEFORE Grep/Glob/Read.** serena: `find_symbol`, `find_referencing_symbols`, `get_symbols_overview` (type-aware LSP). jCodeMunch: semantic search, call hierarchy, dead code detection (lightweight tree-sitter). Fall back to Grep/Glob/Read only when neither covers it.
 
 ## Code Connectivity (CRITICAL — the #1 AI failure mode)
 - BEFORE writing a new file: identify WHERE it will be imported. Name the file and line

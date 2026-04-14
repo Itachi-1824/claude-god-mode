@@ -220,18 +220,16 @@ else
 fi
 add_mcp "context-mode" "context-mode" "[]"
 
-# Codebase Memory
-if has_cmd codebase-memory-mcp; then
-  CBM_PATH="$(which codebase-memory-mcp)"
-  success "codebase-memory-mcp already installed at $CBM_PATH"
-  add_mcp "codebase-memory" "$CBM_PATH" "[]"
+# jCodeMunch
+if has_pip jcodemunch-mcp; then
+  success "jCodeMunch already installed"
 else
-  if ask "Install codebase-memory-mcp? (code knowledge graph, 99% savings)"; then
-    info "Download binary for your OS from:"
-    info "https://github.com/DeusData/codebase-memory-mcp/releases"
-    info "Place it on your PATH, then run this installer again"
+  if ask "Install jCodeMunch? (lightweight code indexing, 95%+ savings, 50-150MB RAM)"; then
+    pip_install jcodemunch-mcp
+    success "jCodeMunch installed"
   fi
 fi
+add_mcp "jcodemunch" "jcodemunch-mcp" "[]"
 
 # Headroom
 if has_cmd headroom || has_pip headroom-ai; then

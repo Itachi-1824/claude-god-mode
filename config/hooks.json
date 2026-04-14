@@ -19,7 +19,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "echo '[TOKEN SAVE] Consider using serena MCP tools (find_symbol, find_referencing_symbols, get_symbols_overview) instead of Grep/Glob. LSP-powered search is faster and more accurate. Only proceed with Grep/Glob if serena does not cover this query.'",
+            "command": "echo '[TOKEN SAVE] Consider using serena (find_symbol, find_referencing_symbols) or jCodeMunch (semantic search, call hierarchy) instead of Grep/Glob. Both are faster and use fewer tokens. Only proceed with Grep/Glob if neither covers this query.'",
             "timeout": 2000
           }
         ]

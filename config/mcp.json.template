@@ -1,9 +1,9 @@
 {
   "_comment": "Add these to ~/.claude.json under mcpServers (via 'claude mcp add' or manual edit)",
   "mcpServers": {
-    "codebase-memory": {
-      "_comment": "Code knowledge graph — 99% token reduction. Install: download binary from https://github.com/DeusData/codebase-memory-mcp/releases",
-      "command": "REPLACE_WITH_PATH_TO/codebase-memory-mcp",
+    "jcodemunch": {
+      "_comment": "Lightweight code indexing — 95%+ token reduction, 50-150MB RAM. Install: pip install jcodemunch-mcp",
+      "command": "jcodemunch-mcp",
       "args": []
     },
     "context-mode": {

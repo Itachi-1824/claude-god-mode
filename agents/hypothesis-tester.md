@@ -4,7 +4,6 @@ description: Generates property-based tests that find edge cases humans miss. Us
 tools: Read, Write, Edit, Bash, Grep, Glob
 model: sonnet
 effort: high
-maxTurns: 15
 color: green
 ---
 

@@ -4,7 +4,6 @@ description: Multi-pass self-review that forces write-critique-rewrite-verify cy
 tools: Read, Edit, Write, Grep, Glob, Bash
 model: opus
 effort: high
-maxTurns: 30
 color: blue
 ---
 

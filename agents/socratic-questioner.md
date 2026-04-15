@@ -4,7 +4,6 @@ description: Mandatory pre-implementation interrogation. Use before any non-triv
 tools: Read, Grep, Glob
 model: sonnet
 effort: medium
-maxTurns: 15
 color: cyan
 ---
 

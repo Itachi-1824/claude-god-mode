@@ -4,7 +4,6 @@ description: Security red team specialist. Attacks the developer's stated securi
 tools: Read, Grep, Glob, Bash
 model: opus
 effort: max
-maxTurns: 20
 color: red
 ---
 

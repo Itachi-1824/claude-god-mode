@@ -4,7 +4,6 @@ description: Parallel bias-isolated review with 4 specialized single-domain revi
 tools: Read, Grep, Glob, Bash
 model: sonnet
 effort: high
-maxTurns: 20
 color: blue
 ---
 

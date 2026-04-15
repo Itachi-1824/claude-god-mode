@@ -4,7 +4,6 @@ description: Pre-implementation requirements interviewer. Use BEFORE any non-tri
 tools: Read, Grep, Glob, Bash
 model: sonnet
 effort: high
-maxTurns: 60
 color: yellow
 ---
 

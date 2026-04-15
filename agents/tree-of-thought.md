@@ -4,7 +4,6 @@ description: Explores multiple solution approaches before committing to one. Use
 tools: Read, Grep, Glob, Bash
 model: opus
 effort: max
-maxTurns: 25
 color: cyan
 ---
 

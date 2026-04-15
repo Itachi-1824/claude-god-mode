@@ -4,7 +4,6 @@ description: Visual design reviewer that critiques UI output. Use PROACTIVELY af
 tools: Read, Grep, Glob, Bash
 model: opus
 effort: high
-maxTurns: 15
 color: pink
 ---
 

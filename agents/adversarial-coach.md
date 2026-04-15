@@ -4,7 +4,6 @@ description: Adversarial code reviewer that tries to break code. Use immediately
 tools: Read, Grep, Glob, Bash
 model: opus
 effort: high
-maxTurns: 15
 color: red
 ---
 

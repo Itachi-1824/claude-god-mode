@@ -4,7 +4,6 @@ description: Verifies that new code is actually wired into the running system â€
 tools: Read, Grep, Glob, Bash
 model: opus
 effort: high
-maxTurns: 20
 color: orange
 ---
 

@@ -4,7 +4,6 @@ description: Detects fake, theatrical, and meaningless tests. Use PROACTIVELY af
 tools: Read, Grep, Glob, Bash
 model: sonnet
 effort: high
-maxTurns: 20
 color: yellow
 ---
 

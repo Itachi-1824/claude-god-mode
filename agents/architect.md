@@ -4,7 +4,6 @@ description: System architecture specialist for design decisions, ADRs, and tech
 tools: Read, Grep, Glob, Bash
 model: opus
 effort: max
-maxTurns: 20
 color: purple
 ---
 

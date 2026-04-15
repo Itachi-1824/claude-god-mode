@@ -16,22 +16,24 @@ process.stdin.on('end', () => {
     if (/^\*\*\/\*\.[a-z]+$/.test(pattern)) return process.exit(0);
     if (/^\*\.[a-z]+$/.test(pattern)) return process.exit(0);
 
-    // Extract tokens from glob
-    const cleaned = pattern.replace(/[*?{}[\]/]/g, ' ').trim();
-    const tokens = cleaned.split(/\s+/).filter(t => t.length >= 3);
+    // Path-based globs are directory searches, not symbol searches — allow them
+    // e.g., "docs/security/**/*", "src/auth/*.ts", "**/components/**"
+    if (pattern.includes('/')) return process.exit(0);
 
-    // Skip directory/framework names
-    const dirs = /^(src|lib|dist|build|test|tests|docs|node_modules|components|pages|api|utils|hooks|stores|types|models|config|assets|public|scripts)$/;
-    const frameworks = /^(next|react|vue|svelte|angular|webpack|vite|jest|vitest|eslint|prettier|typescript|tailwind|prisma)$/;
-    const filtered = tokens.filter(t => !dirs.test(t) && !frameworks.test(t) && !/^\.[a-z]+$/.test(t) && !/^[a-z]{1,6}$/.test(t));
+    // Only block wildcard-wrapped symbols like "*UserService*" or "*handleAuth*"
+    // These are clearly symbol searches, not directory searches
+    const symbolMatch = pattern.match(/^\*+([A-Za-z][a-zA-Z0-9]+)\*+$/);
+    if (!symbolMatch) return process.exit(0);
 
-    const symbols = filtered.filter(t => {
-      if (/^[A-Z_]{3,}$/.test(t)) return false; // constants
-      if (/^[a-z][a-z0-9]*(-[a-z0-9]+)+$/.test(t)) return false; // kebab-case filenames
-      const isCamelCase = /^[a-z][a-zA-Z0-9]{3,}$/.test(t) && /[A-Z]/.test(t);
-      const isPascalCase = /^[A-Z][a-zA-Z][a-zA-Z0-9]{1,}$/.test(t);
-      return isCamelCase || isPascalCase;
-    });
+    const candidate = symbolMatch[1];
+    const isCamelCase = /^[a-z][a-zA-Z0-9]{3,}$/.test(candidate) && /[A-Z]/.test(candidate);
+    const isPascalCase = /^[A-Z][a-zA-Z][a-zA-Z0-9]{2,}$/.test(candidate);
+
+    // Single PascalCase words that are common directory/concept names — allow
+    const commonNames = /^(Security|Components|Services|Models|Types|Config|Utils|Hooks|Pages|Auth|Admin|Dashboard|Settings|Profile|Tests|Specs|Docs|Public|Static|Assets)$/;
+    if (commonNames.test(candidate)) return process.exit(0);
+
+    const symbols = (isCamelCase || isPascalCase) ? [candidate] : [];
 
     if (symbols.length === 0) return process.exit(0);
 

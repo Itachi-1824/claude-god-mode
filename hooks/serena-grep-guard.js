@@ -69,6 +69,7 @@ function isCodeSymbol(s) {
     /^['"`]/,
     /^(error|warning|info|debug|trace|true|false|null|undefined)$/i,
     /^(text|bg|border|flex|grid|p|m|w|h|gap|rounded|shadow|font)-/,  // Tailwind
+    /^(Security|Components|Services|Models|Types|Config|Utils|Hooks|Pages|Auth|Admin|Dashboard|Settings|Profile|Tests|Docs|Public|Static|Assets|Error|Warning|Result|Input|Output|State|Event|Action|Route|Table|Index|Setup|Build|Deploy|Release)$/,  // Common standalone PascalCase words
   ];
   if (allow.some(rx => rx.test(s))) return false;
 

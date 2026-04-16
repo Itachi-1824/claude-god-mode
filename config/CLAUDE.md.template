@@ -64,6 +64,26 @@ For research tasks: delegate to researcher agent with a depth level, not manual 
 **GOOD:** Finish implementing a feature
 → Launch code-reviewer agent → run tests → show connectivity trace → then say "done"
 
+**BAD:** Need to interrogate a research doc for gaps and contradictions
+→ Skill(socratic-questioner) — this is an AGENT, not a skill, the call will fail
+→ Or: do the interrogation inline in the main thread
+
+**GOOD:** Need to interrogate a research doc for gaps and contradictions
+→ Agent({ subagent_type: "socratic-questioner", description: "...", prompt: "..." })
+
+**BAD:** User asks for deep research on a topic
+→ Run WebSearch / WebFetch directly in the main thread, synthesize inline
+→ Or: Skill(researcher) — researcher is an AGENT, not a skill
+
+**GOOD:** User asks for deep research on a topic
+→ Agent({ subagent_type: "researcher", description: "...", prompt: "depth: deep ..." })
+
+**BAD:** After writing 200 lines of new auth code, run /code-review skill
+→ The skill exists but you have a custom adversarial-coach agent that's better
+
+**GOOD:** After writing 200 lines of new auth code
+→ Agent({ subagent_type: "adversarial-coach", ... }) AND Agent({ subagent_type: "red-team", ... }) in parallel
+
 </examples>
 
 ## Code Connectivity (the #1 AI failure mode)
@@ -89,16 +109,55 @@ For research tasks: delegate to researcher agent with a depth level, not manual 
 
 <reminders>
 Tool order: serena/jCodeMunch before Grep. docfork before WebSearch. Agents for review, not inline.
-After writing code: launch code-reviewer agent. After security code: launch red-team agent.
-After any new feature: launch integration-enforcer agent to verify wiring.
-After writing tests: launch test-authenticator agent to verify tests are real.
-When custom agents overlap with plugin skills, prefer the custom agent:
-  - Architecture/planning → use `architect` agent, not ECC /plan or superpowers /write-plan
-  - Code review → use `adversarial-coach` or `multi-perspective-reviewer` agent, not /code-review skill
-  - Security review → use `red-team` agent, not /security-review skill
-  - Research → use `researcher` agent, not manual web searches
-  - Testing → use `hypothesis-tester` or `test-authenticator` agent, not /tdd skill alone
-  - Pre-implementation → use `spec-interviewer` agent, not /plan skill
+
+Agents are dispatched via the Agent tool with subagent_type. They are NOT skills.
+Never call Skill(researcher), Skill(architect), Skill(socratic-questioner), Skill(red-team), Skill(adversarial-coach), Skill(spec-interviewer), Skill(constitutional-reviewer), Skill(design-critic), Skill(ensemble-judge), Skill(hypothesis-tester), Skill(integration-enforcer), Skill(multi-perspective-reviewer), Skill(test-authenticator), Skill(tree-of-thought), Skill(ui-architect) — those will fail.
+Always: Agent({ subagent_type: "<name>", description: "...", prompt: "..." }).
+
+## All 15 custom agents — when to dispatch each
+
+PRE-IMPLEMENTATION (before code is written):
+  - spec-interviewer       → Agent({subagent_type:"spec-interviewer"})        | before any non-trivial feature/refactor — produces SPEC.md with acceptance criteria
+  - socratic-questioner    → Agent({subagent_type:"socratic-questioner"})     | surface assumptions, find existing solutions, prevent over-engineering
+  - architect              → Agent({subagent_type:"architect"})               | system design, ADRs, technical trade-offs — never writes code
+  - tree-of-thought        → Agent({subagent_type:"tree-of-thought"})         | when 3+ fundamentally different approaches exist (algo, data structure)
+  - researcher             → Agent({subagent_type:"researcher", prompt:"depth: surface|basic|deep|in-depth|ultra|nuclear|overkill ..."}) | any research — never WebSearch/WebFetch inline
+
+DURING IMPLEMENTATION (UI-specific):
+  - ui-architect           → Agent({subagent_type:"ui-architect"})            | building/modifying ANY UI, component, layout, page — auto-trigger for frontend
+  - design-critic          → Agent({subagent_type:"design-critic"})           | after ANY frontend change — requires dev server + screenshot, never reviews from code alone
+
+AFTER CODE (review):
+  - adversarial-coach      → Agent({subagent_type:"adversarial-coach"})       | after any significant code change — tries to break code, find bugs/edge cases — never /code-review
+  - multi-perspective-reviewer → Agent({subagent_type:"multi-perspective-reviewer"}) | important PRs, critical code — 4 parallel bias-isolated reviewers (security, perf, tests, correctness)
+  - constitutional-reviewer → Agent({subagent_type:"constitutional-reviewer"}) | critical paths only (auth, billing, data pipelines, core business logic) — write-critique-rewrite-verify
+  - integration-enforcer   → Agent({subagent_type:"integration-enforcer"})    | after ANY new code — verifies wiring, catches dead code/unregistered routes/orphan components
+  - red-team               → Agent({subagent_type:"red-team"})                | auth, billing, API, infrastructure code — attacks security assumptions — never /security-review
+
+TESTS:
+  - hypothesis-tester      → Agent({subagent_type:"hypothesis-tester"})       | pure functions, parsers, serializers, transformations — generates property-based tests
+  - test-authenticator     → Agent({subagent_type:"test-authenticator"})      | after ANY test suite written — detects fake/theatrical/tautological tests — never /tdd alone
+
+JUDGMENT / SELECTION:
+  - ensemble-judge         → Agent({subagent_type:"ensemble-judge"})          | after parallel worktree racing or when multiple solutions exist — picks best by correctness/complexity/testability/maintainability
+
+## Plugin-skill blacklist when custom agent exists
+NEVER use these skills — dispatch the agent instead:
+  /plan, /write-plan, /make-plan, /execute-plan       → architect or spec-interviewer
+  /code-review                                        → adversarial-coach or multi-perspective-reviewer
+  /security-review                                    → red-team
+  /tdd, /tdd-workflow                                 → hypothesis-tester + test-authenticator
+  /search-first, manual WebSearch / WebFetch          → researcher
+  /brainstorming                                      → socratic-questioner or tree-of-thought
+  /frontend-design (when building UI)                 → ui-architect
+
+## Parallel dispatch
+When multiple agents apply and don't depend on each other, dispatch them in parallel — single message with multiple Agent tool calls:
+  - After auth code change: parallel { adversarial-coach, red-team, integration-enforcer }
+  - After UI change: parallel { design-critic, integration-enforcer }
+  - After feature complete: parallel { adversarial-coach, integration-enforcer, test-authenticator }
+
+Failure mode to avoid: doing a custom-agent's job inline in the main thread because it "feels faster". It is not faster — it bloats main context, skips specialist tooling, and produces shallower output. Dispatch.
 </reminders>
 
 <!-- RTK already covered in the RTK section above. Do not re-inject. -->

@@ -1,5 +1,5 @@
 {
-  "_comment": "Merge into ~/.claude/settings.json under hooks key",
+  "_comment": "Merge this hooks block into your ~/.claude/settings.json",
   "hooks": {
     "UserPromptSubmit": [
       {

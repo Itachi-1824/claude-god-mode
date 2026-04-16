@@ -38,6 +38,7 @@ Commit format: `<type>: <description>` (feat, fix, refactor, docs, test, chore, 
 Code navigation: serena (find_symbol, find_referencing_symbols, get_symbols_overview) first, then jCodeMunch (search_symbols, get_call_hierarchy) second. Use Grep/Glob only for literal text searches, not code symbol lookups.
 Library docs: docfork (search_docs, fetch_doc) first. Use WebSearch only when docfork has no results.
 UI components: fetch from 21st-dev-magic, shadcn, magicui, animotion, aceternity MCPs. Write custom CSS only when no library component exists.
+Design tokens: run `rtk dembrandt <url> --json-only` via Bash to extract colors, typography, spacing from any website.
 Visual verification: use glance (browser_screenshot) to see rendered UI. Do not guess visual output from source code.
 After writing code: delegate review to code-reviewer or adversarial-coach agent. After security-sensitive code: delegate to red-team agent.
 For research tasks: delegate to researcher agent with a depth level, not manual web searches.
@@ -91,4 +92,13 @@ Tool order: serena/jCodeMunch before Grep. docfork before WebSearch. Agents for 
 After writing code: launch code-reviewer agent. After security code: launch red-team agent.
 After any new feature: launch integration-enforcer agent to verify wiring.
 After writing tests: launch test-authenticator agent to verify tests are real.
+When custom agents overlap with plugin skills, prefer the custom agent:
+  - Architecture/planning → use `architect` agent, not ECC /plan or superpowers /write-plan
+  - Code review → use `adversarial-coach` or `multi-perspective-reviewer` agent, not /code-review skill
+  - Security review → use `red-team` agent, not /security-review skill
+  - Research → use `researcher` agent, not manual web searches
+  - Testing → use `hypothesis-tester` or `test-authenticator` agent, not /tdd skill alone
+  - Pre-implementation → use `spec-interviewer` agent, not /plan skill
 </reminders>
+
+<!-- RTK already covered in the RTK section above. Do not re-inject. -->
